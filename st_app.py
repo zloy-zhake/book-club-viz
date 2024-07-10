@@ -5,7 +5,14 @@ import matplotlib.ticker as mticker
 import pandas as pd
 import streamlit as st
 
-from book_viz_utils import parse_string_list
+from book_viz_utils import (
+    get_authors_inflection,
+    get_books_inflection,
+    get_column_values_as_list,
+    get_genres_inflection,
+    get_num_meetings_from_df,
+    parse_string_into_list,
+)
 
 AVG_NUM_WORDS_PER_PAGE = 300
 AVG_NUM_WORDS_PER_SENTENCE = 15
@@ -21,91 +28,35 @@ st.header(body="Что мы уже прочитали", anchor="book_list", divi
 # TODO: изменить отображаемые названия столбцов
 # TODO: оформить даты как даты
 books_df = pd.read_excel(io="book_list.xlsx", sheet_name="Sheet1")
-# Format as dollar amount with two decimal places
+# убрать запятые из отображения годов (1,984 -> 1984)
 styled_books_df = books_df.style.format({"year_written_or_published": "{:.0f}"})
-
 st.dataframe(data=styled_books_df)
 
 st.header(body="Общая статистика", anchor="general_stats", divider=True)
 
-dates_df = books_df[["meeting_year", "meeting_month", "meeting_day"]]
-
-num_meetings = dates_df.drop_duplicates().shape[0]
+num_meetings = get_num_meetings_from_df(
+    df=books_df, columns_subset=["meeting_year", "meeting_month", "meeting_day"]
+)
 msg = f"Количество проведённых встреч: **{num_meetings}**."
 st.write(msg)
 
 num_books = len(books_df)
+books_inflection_str = get_books_inflection(num_books=num_books)
 
-# 0 книг
-# 1 книга
-# 2 книги
-# 3 книги
-# 4 книги
-# 5 книг
-# 6 книг
-# 7 книг
-# 8 книг
-# 9 книг
-num_books_last_digit = num_books % 10
-if 5 <= num_books <= 20:
-    book_inflection = "книг"
-elif num_books_last_digit == 1:
-    book_inflection = "книга"
-elif 2 <= num_books_last_digit <= 4:
-    book_inflection = "книги"
-else:
-    book_inflection = "книг"
-
-authors_col = books_df["author"].to_list()
-authors = [parse_string_list(item) for item in authors_col]
-authors = [item for sublist in authors for item in sublist]
+authors = get_column_values_as_list(df=books_df, column_name="author")
 authors_uniq = set(authors)
+num_authors_uniq = len(authors_uniq)
+author_inflection_str = get_authors_inflection(num_authors=num_authors_uniq)
 
-num_authors = len(authors_uniq)
-# 0 авторов
-# 1 автора
-# 2 авторов
-# 3 авторов
-# 4 авторов
-# 5 авторов
-# 6 авторов
-# 7 авторов
-# 8 авторов
-# 9 авторов
-num_authors_last_digit = num_authors % 10
-if num_authors_last_digit == 1:
-    author_inflection = "автора"
-else:
-    author_inflection = "авторов"
-
-genres_col = books_df["genres"].to_list()
-genres = [parse_string_list(item) for item in genres_col]
-genres = [item for sublist in genres for item in sublist]
+genres = get_column_values_as_list(df=books_df, column_name="genres")
 genres_uniq = set(genres)
-
-num_genres = len(genres_uniq)
-# в x0 жанрах
-# в 1 жанре
-# в 2 жанрах
-# в 3 жанрах
-# в 4 жанрах
-# в 5 жанрах
-# в 6 жанрах
-# в 7 жанрах
-# в 8 жанрах
-# в 9 жанрах
-num_genres_last_digit = num_genres % 10
-if 2 <= num_genres <= 20:
-    genre_inflection = "жанрах"
-elif num_genres_last_digit == 1:
-    genre_inflection = "жанре"
-else:
-    genre_inflection = "жанрах"
+num_genres_uniq = len(genres_uniq)
+genre_inflection = get_genres_inflection(num_genres=num_genres_uniq)
 
 msg = (
-    f"Прочитано: **{len(books_df)}** {book_inflection} "
-    f"**{len(authors_uniq)}** {author_inflection} "
-    f"в **{num_genres}** {genre_inflection}."
+    f"Прочитано: **{num_books}** {books_inflection_str} "
+    f"**{num_authors_uniq}** {author_inflection_str} "
+    f"в **{num_genres_uniq}** {genre_inflection}."
 )
 st.write(msg)
 
@@ -200,9 +151,7 @@ msg = msg[:-2] + "."
 st.write(msg)
 
 # самые популярные страны
-country_col = books_df["author_country"].to_list()
-countries = [parse_string_list(item) for item in country_col]
-countries = [item for sublist in countries for item in sublist]
+countries = get_column_values_as_list(df=books_df, column_name="author_country")
 countries_counter = Counter(countries)
 countries_by_freq = countries_counter.most_common()
 
@@ -235,12 +184,15 @@ ax1.set_xlabel("Количество книг")
 
 st.pyplot(fig1)
 
-st.header(body="Распределение авторов по странам", anchor="countries", divider=True)
+# TODO Количество книг по странам
+# TODO: сначала книги, потом авторы, потом страны
+
+st.header(body="Количество авторов по странам", anchor="countries", divider=True)
 
 author_country_df = books_df[["author", "author_country"]]
 author_country_df = author_country_df.drop_duplicates(subset="author")
 country_col_2 = author_country_df["author_country"].to_list()
-countries = [parse_string_list(item) for item in country_col_2]
+countries = [parse_string_into_list(item) for item in country_col_2]
 countries = [item for sublist in countries for item in sublist]
 countries_counter = Counter(countries)
 countries_by_freq = countries_counter.most_common()
@@ -299,7 +251,7 @@ ax3.set_ylabel("Количество книг")
 
 st.pyplot(fig3)
 
-st.header(body="Распределение книг по жанрам", anchor="genres", divider=True)
+st.header(body="Количество книг по жанрам", anchor="genres", divider=True)
 
 fig4, ax4 = plt.subplots()
 ax4.pie(
