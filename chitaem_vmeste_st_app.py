@@ -5,13 +5,12 @@ import matplotlib.ticker as mticker
 import pandas as pd
 import streamlit as st
 
-from book_viz_utils import (
+from book_club_viz_utils import (
     get_authors_inflection,
     get_books_inflection,
     get_column_values_as_list,
     get_genres_inflection,
     get_num_meetings_from_df,
-    parse_string_into_list,
 )
 
 AVG_NUM_WORDS_PER_PAGE = 300
@@ -23,13 +22,33 @@ st.title(body="Книжный клуб «Читаем вместе», г. Алм
 st.write("https://vk.com/chitaemvmestealmaty")
 st.write("https://www.instagram.com/chitaemvmestealmaty/")
 
+books_df = pd.read_excel(io="chitaem_vmeste_book_list.xlsx", sheet_name="Sheet1")
+
+# TODO: сделать шаблон из которого генерировать приложения для каждого клуба
+# TODO: если встреча была раньше 15 января, считать её прошлогодней
+year_options = ["все годы"] + [
+    f"{year} год" for year in sorted(books_df["meeting_year"].unique())
+]
+year_chosen_str = st.selectbox(
+    label="Выберите год:",
+    options=year_options,
+    placeholder=year_options[0],
+    help="Выберите год, за который хотите посмотреть статистику",
+)
+if year_chosen_str is None:
+    year_chosen_str = year_options[0]
+if year_chosen_str != "все годы":
+    year_chosen = int(year_chosen_str[:4])
+    books_df = books_df[books_df["meeting_year"] == year_chosen]
+
+books_df.index = pd.Index(data=range(1, len(books_df) + 1))
+# убираем запятые из отображения годов (1,984 -> 1984)
+styled_books_df = books_df.style.format(
+    formatter={"year_written_or_published": "{:.0f}"}
+)
+
 st.header(body="Что мы уже прочитали", anchor="book_list", divider=True)
 
-# TODO: изменить отображаемые названия столбцов
-# TODO: оформить даты как даты
-books_df = pd.read_excel(io="book_list.xlsx", sheet_name="Sheet1")
-# убрать запятые из отображения годов (1,984 -> 1984)
-styled_books_df = books_df.style.format({"year_written_or_published": "{:.0f}"})
 st.dataframe(data=styled_books_df)
 
 st.header(body="Общая статистика", anchor="general_stats", divider=True)
@@ -94,7 +113,7 @@ msg = (
 )
 st.write(msg)
 
-# самая толстая книга
+# определяем самую толстую книгу
 max_pages = max(num_pages_col)
 max_pages_rows = books_df.loc[books_df["num_pages"] == max_pages]
 if max_pages_rows.shape[0] > 1:
@@ -106,7 +125,7 @@ for row in max_pages_rows.itertuples():
 msg = msg[:-2] + "."
 st.write(msg)
 
-# самая тонкая книга
+# определяем самую тонкую книгу
 min_pages = min(num_pages_col)
 min_pages_rows = books_df.loc[books_df["num_pages"] == min_pages]
 if min_pages_rows.shape[0] > 1:
@@ -118,7 +137,7 @@ for row in min_pages_rows.itertuples():
 msg = msg[:-2] + "."
 st.write(msg)
 
-# самый популярный жанр
+# определеяем самый популярный жанр
 genres_counter = Counter(genres)
 genres_by_freq = genres_counter.most_common()
 
@@ -134,7 +153,7 @@ for genre, freq in genres_by_freq:
 msg = msg[:-2] + "."
 st.write(msg)
 
-# самые популярные авторы
+# определяем самого популярного автора
 authors_counter = Counter(authors)
 authors_by_freq = authors_counter.most_common()
 
@@ -150,7 +169,7 @@ for author, freq in authors_by_freq:
 msg = msg[:-2] + "."
 st.write(msg)
 
-# самые популярные страны
+# определеяем самую популярную страну
 countries = get_column_values_as_list(df=books_df, column_name="author_country")
 countries_counter = Counter(countries)
 countries_by_freq = countries_counter.most_common()
@@ -173,33 +192,61 @@ st.header(
 
 fig1, ax1 = plt.subplots(figsize=(10, 20))
 ax1.barh(
-    range(len(authors_by_freq)), [item[1] for item in authors_by_freq], align="center"
+    y=range(len(authors_by_freq)),
+    width=[item[1] for item in authors_by_freq],
+    align="center",
 )
-ax1.set_yticks(range(len(authors_by_freq)))
-ax1.set_yticklabels([item[0] for item in authors_by_freq])
+ax1.set_yticks(ticks=range(len(authors_by_freq)))
+ax1.set_yticklabels(labels=[item[0] for item in authors_by_freq])
 ax1.invert_yaxis()
-ax1.xaxis.set_major_locator(mticker.MultipleLocator(1))
+ax1.xaxis.set_major_locator(locator=mticker.MultipleLocator(1))
 ax1.grid(axis="x", linestyle="dashed")
-ax1.set_xlabel("Количество книг")
+ax1.set_xlabel(xlabel="Количество книг")
 
-st.pyplot(fig1)
+st.pyplot(fig=fig1)
 
-# TODO Количество книг по странам
-# TODO: сначала книги, потом авторы, потом страны
+st.header(body="Количество книг по странам", anchor="books_by_countries", divider=True)
 
-st.header(body="Количество авторов по странам", anchor="countries", divider=True)
-
-author_country_df = books_df[["author", "author_country"]]
-author_country_df = author_country_df.drop_duplicates(subset="author")
-country_col_2 = author_country_df["author_country"].to_list()
-countries = [parse_string_into_list(item) for item in country_col_2]
-countries = [item for sublist in countries for item in sublist]
+book_country_df = books_df[["title", "author_country"]]
+book_country_df = book_country_df.drop_duplicates(subset="title")
+countries = get_column_values_as_list(df=book_country_df, column_name="author_country")
 countries_counter = Counter(countries)
 countries_by_freq = countries_counter.most_common()
 
 fig4, ax4 = plt.subplots()
 ax4.pie(
-    [item[1] for item in countries_by_freq],
+    x=[item[1] for item in countries_by_freq],
+    labels=[f"{item[0]}\n({item[1]} кн.)" for item in countries_by_freq],
+    autopct="%1.1f%%",
+    startangle=90,
+    explode=[0.1] * len(countries_by_freq),
+)
+ax4.axis("equal")
+
+col_countries_1, col_countries_2 = st.columns(spec=(0.7, 0.3))
+with col_countries_1:
+    st.pyplot(fig=fig4)
+with col_countries_2:
+    freq_sum = sum(item[1] for item in countries_by_freq)
+    msg = ""
+    for country, freq in countries_by_freq:
+        msg += f"- {country}: {freq} кн. ({freq / freq_sum * 100:.1f}%)\n"
+    st.write(msg)
+
+
+st.header(body="Количество авторов по странам", anchor="countries", divider=True)
+
+author_country_df = books_df[["author", "author_country"]]
+author_country_df = author_country_df.drop_duplicates(subset="author")
+countries = get_column_values_as_list(
+    df=author_country_df, column_name="author_country"
+)
+countries_counter = Counter(countries)
+countries_by_freq = countries_counter.most_common()
+
+fig4, ax4 = plt.subplots()
+ax4.pie(
+    x=[item[1] for item in countries_by_freq],
     labels=[f"{item[0]}\n({item[1]} ав.)" for item in countries_by_freq],
     autopct="%1.1f%%",
     startangle=90,
@@ -208,10 +255,8 @@ ax4.pie(
 ax4.axis("equal")
 
 col_countries_1, col_countries_2 = st.columns(spec=(0.7, 0.3))
-
 with col_countries_1:
-    st.pyplot(fig4)
-
+    st.pyplot(fig=fig4)
 with col_countries_2:
     freq_sum = sum(item[1] for item in countries_by_freq)
     msg = ""
@@ -227,7 +272,7 @@ years = books_df["year_written_or_published"].to_list()
 years_counter = Counter(years)
 years_counter_by_freq = years_counter.most_common()
 years_counter_by_freq = sorted(years_counter_by_freq, key=lambda x: x[0])
-years, book_counts = zip(*years_counter_by_freq)  # noqa
+years, book_counts = zip(*years_counter_by_freq)  # type: ignore
 
 dacades_start = years[0] - years[0] % 10
 dacades_end = years[-1] + (10 - years[-1] % 10)
@@ -245,17 +290,17 @@ ax3.bar(
     list(books_per_decade.values()),
 )
 ax3.xaxis.set_tick_params(rotation=75)
-ax3.yaxis.set_major_locator(mticker.MultipleLocator(1))
+ax3.yaxis.set_major_locator(locator=mticker.MultipleLocator(1))
 ax3.grid(axis="y", linestyle="dashed")
-ax3.set_ylabel("Количество книг")
+ax3.set_ylabel(ylabel="Количество книг")
 
-st.pyplot(fig3)
+st.pyplot(fig=fig3)
 
 st.header(body="Количество книг по жанрам", anchor="genres", divider=True)
 
 fig4, ax4 = plt.subplots()
 ax4.pie(
-    [item[1] for item in genres_by_freq],
+    x=[item[1] for item in genres_by_freq],
     labels=[f"{item[0]}\n({item[1]} кн.)" for item in genres_by_freq],
     autopct="%1.1f%%",
     startangle=90,
@@ -264,10 +309,8 @@ ax4.pie(
 ax4.axis("equal")
 
 col_genres_1, col_genres_2 = st.columns(spec=(0.7, 0.3))
-
 with col_genres_1:
-    st.pyplot(fig4)
-
+    st.pyplot(fig=fig4)
 with col_genres_2:
     freq_sum = sum(item[1] for item in genres_by_freq)
     msg = ""
@@ -275,9 +318,6 @@ with col_genres_2:
         msg += f"- {genre}: {freq} кн. ({freq / freq_sum * 100:.1f}%)\n"
     st.write(msg)
 
-
-# количество страниц, прочитанных в месяц
-# количество страниц по времени,
 st.header(
     body="Количество страниц, читаемых в месяц", anchor="pages_per_month", divider=True
 )
@@ -285,12 +325,11 @@ st.header(
 pages_dates_df = books_df[["num_pages", "meeting_year", "meeting_month", "meeting_day"]]
 
 pages_per_month_dict = {}
-# "meeting_month"-"meeting_year": "num_pages"
+# создаём словарь вида: {"meeting_month-meeting_year": "num_pages"}
 for index, row in pages_dates_df.iterrows():
     year = row["meeting_year"]
     month = row["meeting_month"]
     num_pages = row["num_pages"]
-    # pages_per_month_dict[f"{month}-{year}"] = 0
     if row["meeting_day"] < 15:
         if month == 1:
             month = 12
@@ -302,20 +341,19 @@ for index, row in pages_dates_df.iterrows():
 
 fig5, ax5 = plt.subplots(figsize=(20, 10))
 ax5.bar(
-    [f"{m_y}" for m_y in pages_per_month_dict],
-    list(pages_per_month_dict.values()),
+    x=[f"{m_y}" for m_y in pages_per_month_dict],
+    height=list(pages_per_month_dict.values()),
 )
 ax5.xaxis.set_tick_params(rotation=75)
 ax5.grid(axis="y", linestyle="dashed")
-ax5.set_ylabel("Количество страниц")
+ax5.set_ylabel(ylabel="Количество страниц")
 
-st.pyplot(fig5)
-
+st.pyplot(fig=fig5)
 
 # гистограмма толщины книг
 st.header(
     body=(
-        "Распределение (гистограмма) количества страниц книг  "
+        "Распределение (гистограмма) количества страниц в книгах  "
         "(книги какой толщины мы читаем больше всего / меньше всего)"
     ),
     anchor="pages",
@@ -325,11 +363,12 @@ st.header(
 book_num_pages = books_df["num_pages"].to_list()
 
 fig6, ax6 = plt.subplots()
-ax6.hist(book_num_pages, bins=20)
-ax6.xaxis.set_major_locator(mticker.MultipleLocator(100))
-ax6.yaxis.set_major_locator(mticker.MultipleLocator(1))
+ax6.hist(x=book_num_pages, bins=20)
+ax6.xaxis.set_major_locator(locator=mticker.MultipleLocator(100))
+ax6.yaxis.set_major_locator(locator=mticker.MultipleLocator(1))
+ax6.set_xlim(left=0)
+ax6.set_xlabel(xlabel="Количество страниц")
+ax6.set_ylabel(ylabel="Количество книг")
 ax6.grid(axis="y", linestyle="dashed")
-ax6.set_xlabel("Количество страниц")
-ax6.set_ylabel("Количество книг")
 
-st.pyplot(fig6)
+st.pyplot(fig=fig6)
