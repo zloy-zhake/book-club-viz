@@ -84,7 +84,9 @@ def get_authors_inflection(num_authors: int) -> str:
     # 9 авторов
     """
     num_authors_last_digit = num_authors % 10
-    if num_authors_last_digit == 1:
+    if 2 <= num_authors <= 20:
+        author_inflection = "авторов"
+    elif num_authors_last_digit == 1:
         author_inflection = "автора"
     else:
         author_inflection = "авторов"

@@ -24,8 +24,6 @@ st.write("https://www.instagram.com/chitaemvmestealmaty/")
 
 books_df = pd.read_excel(io="chitaem_vmeste_book_list.xlsx", sheet_name="Sheet1")
 
-# TODO: сделать шаблон из которого генерировать приложения для каждого клуба
-# TODO: если встреча была раньше 15 января, считать её прошлогодней
 year_options = ["все годы"] + [
     f"{year} год" for year in sorted(books_df["meeting_year"].unique())
 ]
@@ -47,11 +45,19 @@ styled_books_df = books_df.style.format(
     formatter={"year_written_or_published": "{:.0f}"}
 )
 
-st.header(body="Что мы уже прочитали", anchor="book_list", divider=True)
+st.header(
+    body=f"Что мы уже прочитали (за {year_chosen_str})",
+    anchor="book_list",
+    divider=True,
+)
 
 st.dataframe(data=styled_books_df)
 
-st.header(body="Общая статистика", anchor="general_stats", divider=True)
+st.header(
+    body=f"Общая статистика (за {year_chosen_str})",
+    anchor="general_stats",
+    divider=True,
+)
 
 num_meetings = get_num_meetings_from_df(
     df=books_df, columns_subset=["meeting_year", "meeting_month", "meeting_day"]
@@ -187,7 +193,9 @@ msg = msg[:-2] + "."
 st.write(msg)
 
 st.header(
-    body="Количество прочитанных книг каждого автора", anchor="autors", divider=True
+    body=f"Количество прочитанных книг каждого автора (за {year_chosen_str})",
+    anchor="autors",
+    divider=True,
 )
 
 fig1, ax1 = plt.subplots(figsize=(10, 20))
@@ -205,7 +213,11 @@ ax1.set_xlabel(xlabel="Количество книг")
 
 st.pyplot(fig=fig1)
 
-st.header(body="Количество книг по странам", anchor="books_by_countries", divider=True)
+st.header(
+    body=f"Количество книг по странам (за {year_chosen_str})",
+    anchor="books_by_countries",
+    divider=True,
+)
 
 book_country_df = books_df[["title", "author_country"]]
 book_country_df = book_country_df.drop_duplicates(subset="title")
@@ -234,7 +246,11 @@ with col_countries_2:
     st.write(msg)
 
 
-st.header(body="Количество авторов по странам", anchor="countries", divider=True)
+st.header(
+    body=f"Количество авторов по странам (за {year_chosen_str})",
+    anchor="countries",
+    divider=True,
+)
 
 author_country_df = books_df[["author", "author_country"]]
 author_country_df = author_country_df.drop_duplicates(subset="author")
@@ -265,7 +281,9 @@ with col_countries_2:
     st.write(msg)
 
 st.header(
-    body="Распределение книг по годам написания/издания", anchor="years", divider=True
+    body=f"Распределение книг по годам написания/издания (за {year_chosen_str})",
+    anchor="years",
+    divider=True,
 )
 
 years = books_df["year_written_or_published"].to_list()
@@ -296,7 +314,11 @@ ax3.set_ylabel(ylabel="Количество книг")
 
 st.pyplot(fig=fig3)
 
-st.header(body="Количество книг по жанрам", anchor="genres", divider=True)
+st.header(
+    body=f"Количество книг по жанрам (за {year_chosen_str})",
+    anchor="genres",
+    divider=True,
+)
 
 fig4, ax4 = plt.subplots()
 ax4.pie(
@@ -319,7 +341,9 @@ with col_genres_2:
     st.write(msg)
 
 st.header(
-    body="Количество страниц, читаемых в месяц", anchor="pages_per_month", divider=True
+    body=f"Количество страниц, читаемых в месяц (за {year_chosen_str})",
+    anchor="pages_per_month",
+    divider=True,
 )
 
 pages_dates_df = books_df[["num_pages", "meeting_year", "meeting_month", "meeting_day"]]
@@ -353,13 +377,14 @@ st.pyplot(fig=fig5)
 # гистограмма толщины книг
 st.header(
     body=(
-        "Распределение (гистограмма) количества страниц в книгах  "
-        "(книги какой толщины мы читаем больше всего / меньше всего)"
+        "Распределение (гистограмма) количества страниц в книгах "
+        f"(за {year_chosen_str})"
     ),
     anchor="pages",
     divider=True,
 )
 
+st.write("Книги какой толщины мы читаем больше всего / меньше всего.")
 book_num_pages = books_df["num_pages"].to_list()
 
 fig6, ax6 = plt.subplots()
