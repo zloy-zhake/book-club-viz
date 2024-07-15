@@ -14,6 +14,9 @@ create_dev_venv:      ## Создать виртуальное окружени�
 run_chitaem_vmeste_app:  ## Запустить сервис
 	poetry run streamlit run chitaem_vmeste_st_app.py
 
+run_boohedonists_app:  ## Запустить сервис
+	poetry run streamlit run boohedonists_st_app.py
+
 # run_api:          ## Запустить API локально
 # 	poetry run python spam_detector_api
 
