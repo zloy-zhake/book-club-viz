@@ -12,6 +12,7 @@ from book_club_viz_utils import (
     get_genres_inflection,
     get_num_meetings_from_df,
     is_dict_has_n_or_more_consecutive_values,
+    shrink_dict_consecutive_values,
 )
 
 AVG_NUM_WORDS_PER_PAGE = 300
@@ -294,22 +295,22 @@ dacades_start = years[0] - years[0] % 10
 dacades_end = years[-1] + (10 - years[-1] % 10)
 dacades = list(range(dacades_start, dacades_end + 10, 10))
 books_per_decade_dict = {
-    (dacades[i] + 1, dacades[i + 1]): 0 for i in range(len(dacades) - 1)
+    f"{dacades[i] + 1}-{dacades[i + 1]}": 0 for i in range(len(dacades) - 1)
 }
 for year, count in zip(years, book_counts):
-    decade = (year - year % 10 + 1, year + (10 - year % 10))
+    decade = f"{year - year % 10 + 1}-{year + (10 - year % 10)}"
     books_per_decade_dict[decade] += count
 
 if is_dict_has_n_or_more_consecutive_values(dict_=books_per_decade_dict, value=0, n=3):
-    decades = list(books_per_decade_dict.keys())
-    books_per_decade = list(books_per_decade_dict.values())
-
+    decades, num_books = shrink_dict_consecutive_values(
+        dict_=books_per_decade_dict,
+        value_to_shrink=0,
+        num_consecutive_values_to_shrink=3,
+        fill_value="...",
+    )
 
 fig3, ax3 = plt.subplots()
-ax3.bar(
-    [f"{item[0]}-{item[1]}" for item in books_per_decade_dict],
-    list(books_per_decade_dict.values()),
-)
+ax3.bar(x=decades, height=num_books)
 ax3.xaxis.set_tick_params(rotation=75)
 ax3.yaxis.set_major_locator(locator=mticker.MultipleLocator(1))
 ax3.grid(axis="y", linestyle="dashed")

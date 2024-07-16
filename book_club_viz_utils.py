@@ -128,12 +128,16 @@ def is_dict_has_n_or_more_consecutive_values(dict_: dict, value: int, n: int) ->
     return result
 
 
+DECADE = str  # "1911-1920"
+BOOK_NUM = int
+
+
 def shrink_dict_consecutive_values(
     dict_: dict,
     value_to_shrink: int,
     num_consecutive_values_to_shrink: int,
     fill_value: int | str,
-) -> dict:
+) -> tuple[list[DECADE], list[BOOK_NUM]]:
     """TODO:"""
     keys = list(dict_.keys())
     values = list(dict_.values())
@@ -151,13 +155,13 @@ def shrink_dict_consecutive_values(
             new_values.append(val)
             new_keys.append(fill_value)
             new_values.append(val)
-            cur_index = cur_index + len(consecutive_val_list)
+            cur_index = cur_index + len(consecutive_val_list) - 1
             new_keys.append(keys[cur_index])
             new_values.append(val)
+            cur_index += 1
         else:
             new_keys.extend(keys[cur_index : cur_index + len(consecutive_val_list)])
             new_values.extend(consecutive_val_list)
-        cur_index = cur_index + len(consecutive_val_list)
+            cur_index = cur_index + len(consecutive_val_list)
 
-    shrunk_dict = dict(zip(new_keys, new_values))
-    return shrunk_dict
+    return new_keys, new_values
