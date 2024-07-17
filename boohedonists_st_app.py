@@ -1,3 +1,4 @@
+import json
 from collections import Counter
 
 import matplotlib.pyplot as plt
@@ -413,4 +414,31 @@ with tab_with_book_stats:
     st.pyplot(fig=fig6)
 
 with tab_with_reviews:
-    st.write("Пока нет отзывов на книги :(")
+    with open("boohedonists_reviews.json", "r", encoding="utf-8") as f:
+        reviews = json.load(f)
+
+    review_sets_dict = {}
+    for review in reviews:
+        if f"{review["book_author"]} {review["book_title"]}" not in review_sets_dict:
+            review_sets_dict[f"{review['book_author']} {review['book_title']}"] = [
+                review
+            ]
+        else:
+            review_sets_dict[f"{review['book_author']} {review['book_title']}"].append(
+                review
+            )
+
+    for k, review_set in review_sets_dict.items():
+        with st.expander(
+            label=f"📖 **{review_set[0]["book_author"]} *{review_set[0]["book_title"]}***",
+            expanded=False,
+        ):
+            for review in review_set:
+                with st.chat_message(name="human"):
+                    reviewer = (
+                        review["reviewer_alias"]
+                        if review["reviewer_alias"] != ""
+                        else review["reviewer"]
+                    )
+                    st.write(f"**{reviewer}** ({review["date"]}):")
+                    st.write(review["review"])
