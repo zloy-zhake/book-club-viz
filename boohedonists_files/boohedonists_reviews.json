@@ -1,7 +1,7 @@
 [
     {
         "date": "2021-07-10",
-        "reviewer": "@lumturo",
+        "reviewer": "lumturo",
         "reviewer_alias": "",
         "book_author": "Евгений Замятин",
         "book_title": "«Мы»",
@@ -9,7 +9,7 @@
     },
     {
         "date": "2021-07-10",
-        "reviewer": "@KatePadyukova",
+        "reviewer": "KatePadyukova",
         "reviewer_alias": "",
         "book_author": "Евгениос Тривизас",
         "book_title": "«Последний черный кот»",
@@ -17,7 +17,7 @@
     },
     {
         "date": "2021-07-10",
-        "reviewer": "@KatePadyukova",
+        "reviewer": "KatePadyukova",
         "reviewer_alias": "",
         "book_author": "Марти Кляйн",
         "book_title": "«Сексуальный интеллект. Каков ваш SQ и почему он важнее  техники?»",
@@ -25,7 +25,7 @@
     },
     {
         "date": "2021-07-24",
-        "reviewer": "@zloy_zhake",
+        "reviewer": "zloy_zhake",
         "reviewer_alias": "",
         "book_author": "Джон Стейнбек",
         "book_title": "«К востоку от Эдема»",
@@ -33,7 +33,7 @@
     },
     {
         "date": "2021-07-24",
-        "reviewer": "@sunnyvsnight",
+        "reviewer": "sunnyvsnight",
         "reviewer_alias": "",
         "book_author": "Джон Стейнбек",
         "book_title": "«К востоку от Эдема»",
@@ -41,7 +41,7 @@
     },
     {
         "date": "2021-07-30",
-        "reviewer": "@sunnyvsnight",
+        "reviewer": "sunnyvsnight",
         "reviewer_alias": "",
         "book_author": "Нил Гейман, Терри Пратчетт",
         "book_title": "«Благие знамения»",
@@ -49,7 +49,7 @@
     },
     {
         "date": "2021-07-31",
-        "reviewer": "@KatePadyukova",
+        "reviewer": "KatePadyukova",
         "reviewer_alias": "",
         "book_author": "Зэди Смит",
         "book_title": "«Белые зубы»",
@@ -57,7 +57,7 @@
     },
     {
         "date": "2021-08-07",
-        "reviewer": "@sunnyvsnight",
+        "reviewer": "sunnyvsnight",
         "reviewer_alias": "",
         "book_author": "Джеймс Доти",
         "book_title": "«Волшебная лавка. Книга, вдохновившая BTS на песню Magic Shop»",
@@ -65,7 +65,7 @@
     },
     {
         "date": "2021-08-08",
-        "reviewer": "@zloy_zhake",
+        "reviewer": "zloy_zhake",
         "reviewer_alias": "",
         "book_author": "Джеральд Бром",
         "book_title": "«Похититель детей»",
@@ -73,7 +73,7 @@
     },
     {
         "date": "2021-08-12",
-        "reviewer": "@KatePadyukova",
+        "reviewer": "KatePadyukova",
         "reviewer_alias": "",
         "book_author": "Чарльз де Линт",
         "book_title": "«Кошки Дремучего леса»",
@@ -81,7 +81,7 @@
     },
     {
         "date": "2021-08-16",
-        "reviewer": "@KatePadyukova",
+        "reviewer": "KatePadyukova",
         "reviewer_alias": "",
         "book_author": "Мэтт Хейг",
         "book_title": "«Полночная библиотека»",
@@ -89,7 +89,7 @@
     },
     {
         "date": "2021-08-19",
-        "reviewer": "@KatePadyukova",
+        "reviewer": "KatePadyukova",
         "reviewer_alias": "",
         "book_author": "Даниэль Глаттауэр",
         "book_title": "«Лучшее средство от северного ветра»",
@@ -97,7 +97,7 @@
     },
     {
         "date": "2021-08-25",
-        "reviewer": "@zloy_zhake",
+        "reviewer": "zloy_zhake",
         "reviewer_alias": "",
         "book_author": "Людмила Улицкая",
         "book_title": "«Искренне ваш Шурик»",
@@ -105,7 +105,7 @@
     },
     {
         "date": "2021-08-25",
-        "reviewer": "@zloy_zhake",
+        "reviewer": "zloy_zhake",
         "reviewer_alias": "",
         "book_author": "Терри Пратчетт",
         "book_title": "«Шмяк!»",
@@ -113,7 +113,7 @@
     },
     {
         "date": "2021-08-31",
-        "reviewer": "@sunnyvsnight",
+        "reviewer": "sunnyvsnight",
         "reviewer_alias": "",
         "book_author": "Гретхен Рубин",
         "book_title": "«Проект Счастье. Мечты. План. Новая жизнь»",
