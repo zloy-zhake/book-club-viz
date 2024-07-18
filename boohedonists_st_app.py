@@ -53,7 +53,7 @@ with tab_with_book_stats:
     )
 
     st.header(
-        body=f"Что мы уже прочитали (за {year_chosen_str})",
+        body=f"Что мы уже выбирали для чтения (за {year_chosen_str})",
         anchor="book_list",
         divider=True,
     )
@@ -86,7 +86,7 @@ with tab_with_book_stats:
     genre_inflection = get_genres_inflection(num_genres=num_genres_uniq)
 
     msg = (
-        f"Прочитано: **{num_books}** {books_inflection_str} "
+        f"Выбрано для чтения: **{num_books}** {books_inflection_str} "
         f"**{num_authors_uniq}** {author_inflection_str} "
         f"в **{num_genres_uniq}** {genre_inflection}."
     )
@@ -106,7 +106,7 @@ with tab_with_book_stats:
     num_sentences_str = f"{num_sentences:_.0f}".replace("_", " ")
 
     msg = (
-        f"Примерное количество прочитанных страниц: **{num_pages_total_str}**. "
+        f"Примерное количество страниц в выбранных книгах: **{num_pages_total_str}**. "
         "Если сложить столько страниц в одну стопку, "
         f"то её высота составит, примерно, **{pages_height_str} м.** "
         "(Из расчёта, что толщина одной страницы составляет "
@@ -115,13 +115,13 @@ with tab_with_book_stats:
     st.write(msg)
 
     msg = (
-        f"Примерное количество прочитанных предложений: **{num_sentences_str}**. "
+        f"Примерное количество предложений в выбранных книгах: **{num_sentences_str}**. "
         f"(Из расчёта {AVG_NUM_WORDS_PER_SENTENCE} слов на предложение)"
     )
     st.write(msg)
 
     msg = (
-        f"Примерное количество прочитанных слов: **{num_words_str}**. "
+        f"Примерное количество слов в выбранных книгах: **{num_words_str}**. "
         f"(Из расчёта {AVG_NUM_WORDS_PER_PAGE} слов на страницу): "
     )
     st.write(msg)
@@ -130,9 +130,9 @@ with tab_with_book_stats:
     max_pages = max(num_pages_col)
     max_pages_rows = books_df.loc[books_df["num_pages"] == max_pages]
     if max_pages_rows.shape[0] > 1:
-        msg = "Самые толстые прочитанные книги: "
+        msg = "Самые толстые выбранные книги: "
     else:
-        msg = "Самая толстая прочитанная книга: "
+        msg = "Самая толстая выбранная книга: "
     for row in max_pages_rows.itertuples():
         msg += f"**{row.author[1:-1]} *{row.title}*** ({row.num_pages} стр.), "
     msg = msg[:-2] + "."
@@ -142,9 +142,9 @@ with tab_with_book_stats:
     min_pages = min(num_pages_col)
     min_pages_rows = books_df.loc[books_df["num_pages"] == min_pages]
     if min_pages_rows.shape[0] > 1:
-        msg = "Самые тонкие прочитанные книги: "
+        msg = "Самые тонкие выбранные книги: "
     else:
-        msg = "Самая тонкая прочитанная книга: "
+        msg = "Самая тонкая выбранная книга: "
     for row in min_pages_rows.itertuples():
         msg += f"**{row.author[1:-1]} *{row.title}*** ({row.num_pages} стр.), "
     msg = msg[:-2] + "."
@@ -200,7 +200,7 @@ with tab_with_book_stats:
     st.write(msg)
 
     st.header(
-        body=f"Количество прочитанных книг каждого автора (за {year_chosen_str})",
+        body=f"Количество выбранных книг каждого автора (за {year_chosen_str})",
         anchor="autors",
         divider=True,
     )
@@ -358,7 +358,7 @@ with tab_with_book_stats:
         st.write(msg)
 
     st.header(
-        body=f"Количество страниц, читаемых в месяц (за {year_chosen_str})",
+        body=f"Количество страниц в выбранных книгах в месяц (за {year_chosen_str})",
         anchor="pages_per_month",
         divider=True,
     )
@@ -403,7 +403,7 @@ with tab_with_book_stats:
         divider=True,
     )
 
-    st.write("Книги какой толщины мы читаем больше всего / меньше всего.")
+    st.write("Книги какой толщины мы выбираем больше всего / меньше всего.")
     book_num_pages = books_df["num_pages"].to_list()
 
     fig6, ax6 = plt.subplots()
