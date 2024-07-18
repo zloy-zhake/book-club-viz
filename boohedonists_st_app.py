@@ -433,8 +433,13 @@ with tab_with_reviews:
             )
 
     for k, review_set in review_sets_dict.items():
+        num_reviews = len(review_set)
         with st.expander(
-            label=f"📖 **{review_set[0]["book_author"]} *{review_set[0]["book_title"]}***",
+            label=(
+                f"📖 **{review_set[0]["book_author"]} "
+                f"*{review_set[0]["book_title"]}*** "
+                f"({num_reviews} отз.)"
+            ),
             expanded=False,
         ):
             for review in review_set:
