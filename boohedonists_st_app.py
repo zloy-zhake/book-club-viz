@@ -27,7 +27,9 @@ tab_with_book_stats, tab_with_reviews = st.tabs(
 )
 
 with tab_with_book_stats:
-    books_df = pd.read_excel(io="boohedonists_book_list.xlsx", sheet_name="Sheet1")
+    books_df = pd.read_excel(
+        io="boohedonists_files/boohedonists_book_list.xlsx", sheet_name="Sheet1"
+    )
 
     year_options = ["все годы"] + [
         f"{year} год" for year in sorted(books_df["voting_year"].unique())
@@ -414,7 +416,9 @@ with tab_with_book_stats:
     st.pyplot(fig=fig6)
 
 with tab_with_reviews:
-    with open("boohedonists_reviews.json", "r", encoding="utf-8") as f:
+    with open(
+        "boohedonists_files/boohedonists_reviews.json", "r", encoding="utf-8"
+    ) as f:
         reviews = json.load(f)
 
     review_sets_dict = {}

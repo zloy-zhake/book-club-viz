@@ -22,7 +22,9 @@ st.title(body="Книжный клуб «Читаем вместе», г. Алм
 st.write("https://vk.com/chitaemvmestealmaty")
 st.write("https://www.instagram.com/chitaemvmestealmaty/")
 
-books_df = pd.read_excel(io="chitaem_vmeste_book_list.xlsx", sheet_name="Sheet1")
+books_df = pd.read_excel(
+    io="chitaem_vmeste_files/chitaem_vmeste_book_list.xlsx", sheet_name="Sheet1"
+)
 
 year_options = ["все годы"] + [
     f"{year} год" for year in sorted(books_df["meeting_year"].unique())
