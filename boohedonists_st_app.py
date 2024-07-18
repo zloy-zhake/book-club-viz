@@ -319,6 +319,8 @@ with tab_with_book_stats:
             num_consecutive_values_to_shrink=3,
             fill_value="...",
         )
+    else:
+        decades, num_books = zip(*books_per_decade_dict.items())
 
     fig3, ax3 = plt.subplots()
     ax3.bar(x=decades, height=num_books)
