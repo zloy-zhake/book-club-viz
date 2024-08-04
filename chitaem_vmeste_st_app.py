@@ -254,11 +254,11 @@ st.header(
     divider=True,
 )
 
-author_country_df = books_df[["author", "author_country"]]
-author_country_df = author_country_df.drop_duplicates(subset="author")
-countries = get_column_values_as_list(
-    df=author_country_df, column_name="author_country"
-)
+# TODO: перенеси в книгеддонисты
+authors = get_column_values_as_list(df=books_df, column_name="author")
+countries = get_column_values_as_list(df=books_df, column_name="author_country")
+author_country_dict = {author: country for author, country in zip(authors, countries)}
+countries = list(author_country_dict.values())
 countries_counter = Counter(countries)
 countries_by_freq = countries_counter.most_common()
 
@@ -281,6 +281,39 @@ with col_countries_2:
     for country, freq in countries_by_freq:
         msg += f"- {country}: {freq} ав. ({freq / freq_sum * 100:.1f}%)\n"
     st.write(msg)
+
+
+st.header(body="Количество авторов по полу", anchor="gender", divider=True)
+
+authors = get_column_values_as_list(df=books_df, column_name="author")
+genders = get_column_values_as_list(df=books_df, column_name="author_gender")
+author_gender_dict = {author: gender for author, gender in zip(authors, genders)}
+genders = list(author_gender_dict.values())
+genders_counter = Counter(genders)
+genders_by_freq = genders_counter.most_common()
+
+fig3, ax3 = plt.subplots()
+ax3.bar(
+    x=[item[0] for item in genders_by_freq],
+    height=[item[1] for item in genders_by_freq],
+)
+ax3.set_xticklabels(labels=[item[0] for item in genders_by_freq], rotation=45)
+
+fig2, ax2 = plt.subplots()
+ax2.pie(
+    x=[item[1] for item in genders_by_freq],
+    labels=[f"{item[0]}\n({item[1]} ав.)" for item in genders_by_freq],
+    autopct="%1.1f%%",
+    startangle=90,
+    explode=[0.1] * len(genders_by_freq),
+)
+ax2.axis("equal")
+
+col_genders_1, col_genders_2 = st.columns(spec=(0.5, 0.5))
+with col_genders_1:
+    st.pyplot(fig=fig3)
+with col_genders_2:
+    st.pyplot(fig=fig2)
 
 st.header(
     body=f"Распределение книг по годам написания/издания (за {year_chosen_str})",
