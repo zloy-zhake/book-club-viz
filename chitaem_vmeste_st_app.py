@@ -19,8 +19,14 @@ PAPER_THICKNESS_IN_METERS = 0.000103
 
 st.title(body="Книжный клуб «Читаем вместе», г. Алматы")
 
-st.write("https://vk.com/chitaemvmestealmaty")
-st.write("https://www.instagram.com/chitaemvmestealmaty/")
+st.header(body="Наши ссылки", anchor="links", divider=True)
+st.write("ВК: https://vk.com/chitaemvmestealmaty/")
+st.write("Инстаграм: https://www.instagram.com/chitaemvmestealmaty/")
+st.write("Телеграм: https://t.me/+s7snk1T6nJ5kNzUy/")
+st.write(
+    "Список предложенных на будущее книг: https://docs.google.com/document/d/1242Tldk4A7TYL7UITHvGOSMZeyjIA9S_tLM-KKjER9A/edit?usp=sharing"
+)
+st.divider()
 
 books_df = pd.read_excel(
     io="chitaem_vmeste_files/chitaem_vmeste_book_list.xlsx", sheet_name="Sheet1"
