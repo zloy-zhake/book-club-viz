@@ -30,7 +30,8 @@ st.write("ВК: https://vk.com/chitaemvmestealmaty/")
 st.write("Инстаграм: https://www.instagram.com/chitaemvmestealmaty/")
 st.write("Телеграм: https://t.me/+s7snk1T6nJ5kNzUy/")
 st.write(
-    "Список предложенных на будущее книг: https://docs.google.com/document/d/1242Tldk4A7TYL7UITHvGOSMZeyjIA9S_tLM-KKjER9A/edit?usp=sharing"
+    "Список предложенных на будущее книг: "
+    "https://docs.google.com/document/d/1242Tldk4A7TYL7UITHvGOSMZeyjIA9S_tLM-KKjER9A/edit?usp=sharing"
 )
 
 st.divider()
