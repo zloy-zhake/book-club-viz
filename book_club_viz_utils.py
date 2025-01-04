@@ -1,5 +1,11 @@
 import pandas as pd
 from itertools import groupby
+import streamlit as st
+
+
+@st.cache_data
+def read_data_file(data_file_path: str) -> pd.DataFrame:
+    return pd.read_excel(io=data_file_path)
 
 
 def get_num_meetings_from_df(df: pd.DataFrame, columns_subset: list[str]) -> int:

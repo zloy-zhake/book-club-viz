@@ -6,6 +6,7 @@ import pandas as pd
 import streamlit as st
 
 from book_club_viz_utils import (
+    read_data_file,
     get_authors_inflection,
     get_books_inflection,
     get_column_values_as_list,
@@ -16,6 +17,7 @@ from book_club_viz_utils import (
 AVG_NUM_WORDS_PER_PAGE = 300
 AVG_NUM_WORDS_PER_SENTENCE = 15
 PAPER_THICKNESS_IN_METERS = 0.000103
+DATA_FILE_PATH = "chitaem_vmeste_files/chitaem_vmeste_book_list.xlsx"
 
 st.title(body="Книжный клуб «Читаем вместе», г. Алматы")
 
@@ -33,9 +35,7 @@ st.write(
 
 st.divider()
 
-books_df = pd.read_excel(
-    io="chitaem_vmeste_files/chitaem_vmeste_book_list.xlsx", sheet_name="Sheet1"
-)
+books_df = read_data_file(data_file_path=DATA_FILE_PATH)
 
 year_options = ["все годы"] + [
     f"{year} год" for year in sorted(books_df["meeting_year"].unique())
