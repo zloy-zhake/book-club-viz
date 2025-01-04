@@ -18,6 +18,7 @@ optional = true
 jupyterlab = "^4.2.3"
 ruff = "^0.5.0"
 mypy = "^1.10.1"
+pytest = "^8.3.4"
 
 [build-system]
 requires = ["poetry-core"]
