@@ -73,7 +73,7 @@ st.header(
 )
 
 num_meetings = get_num_meetings_from_df(
-    df=books_df, columns_subset=["meeting_year", "meeting_month", "meeting_day"]
+    df=books_df, date_columns_subset=["meeting_year", "meeting_month", "meeting_day"]
 )
 msg = f"Количество проведённых встреч: **{num_meetings}**."
 st.write(msg)

@@ -8,9 +8,16 @@ def read_data_file(data_file_path: str) -> pd.DataFrame:
     return pd.read_excel(io=data_file_path)
 
 
-def get_num_meetings_from_df(df: pd.DataFrame, columns_subset: list[str]) -> int:
-    """TODO:"""
-    dates_df = df[columns_subset]
+def get_num_meetings_from_df(df: pd.DataFrame, date_columns_subset: list[str]) -> int:
+    # date_columns_subset не должен быть пустым
+    if len(date_columns_subset) == 0:
+        raise ValueError("date_columns_subset is empty")
+    # Проверяем содержит ли df все необходимые слолбцы
+    if not set(date_columns_subset).issubset(df.columns):
+        raise ValueError(
+            f"df does not contain all of the columns: {df.columns=} {date_columns_subset=}"
+        )
+    dates_df = df[date_columns_subset]
     num_meetings = dates_df.drop_duplicates().shape[0]
     return num_meetings
 

@@ -67,7 +67,7 @@ with tab_with_book_stats:
     )
 
     num_meetings = get_num_meetings_from_df(
-        df=books_df, columns_subset=["voting_year", "voting_month", "voting_day"]
+        df=books_df, date_columns_subset=["voting_year", "voting_month", "voting_day"]
     )
     msg = f"Количество проведённых голосований за книги: **{num_meetings}**."
     st.write(msg)
