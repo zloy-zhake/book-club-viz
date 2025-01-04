@@ -17,6 +17,9 @@ run_chitaem_vmeste_app:  ## Запустить сервис
 run_boohedonists_app:  ## Запустить сервис
 	poetry run streamlit run boohedonists_st_app.py
 
+run_tests: ## Запустить тесты
+	PYTHONPATH=. poetry run python -m pytest
+
 # run_api:          ## Запустить API локально
 # 	poetry run python spam_detector_api
 
